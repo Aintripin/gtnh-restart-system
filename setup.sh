@@ -10,7 +10,7 @@
 set -e  # Exit on error
 
 # Version
-VERSION="1.0.0"
+VERSION="1.0.1"
 
 # Colors for output
 RED='\033[0;31m'
@@ -228,10 +228,12 @@ generate_service_name() {
     # Sanitize name: lowercase, replace special chars with dash, remove consecutive dashes
     folder_name=$(echo "$folder_name" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | sed 's/--*/-/g')
     
-    # Generate service names
+    # Generate service names (use hyphens for systemd convention)
     SERVICE_NAME="gtnh-${folder_name}"
     MONITORS_SERVICE_NAME="${SERVICE_NAME}-monitors"
-    SCREEN_SESSION_NAME="${SERVICE_NAME}"
+    
+    # Generate screen name (use underscores for better pattern matching)
+    SCREEN_SESSION_NAME="gtnh_$(echo "$folder_name" | tr '-' '_')"
     
     echo "Generated service name: ${SERVICE_NAME}"
     echo "Folder: $folder_name"
@@ -1232,35 +1234,14 @@ MASTER_MONITOR_EOF
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR" || exit 1
 
-echo "Starting GTNH monitoring system (modular version)..."
-
 # Stop any existing instances of monitor scripts
 pkill -f gtnh_vote_monitor.sh 2>/dev/null
 pkill -f gtnh_master_monitor.sh 2>/dev/null
 sleep 1
 
 # Start the master monitor script (vote + TPS)
-./gtnh_master_monitor.sh &
-MONITOR_PID=$!
-echo "Started master monitor (PID: $MONITOR_PID)"
-
-sleep 2
-
-# Check if the script is actually running
-if ps -p $MONITOR_PID > /dev/null; then
-    echo "✓ Master monitor is running successfully"
-    echo "  - Vote monitoring: Active"
-    echo "  - TPS monitoring: Active"
-else
-    echo "✗ Master monitor failed to start. Check for errors."
-fi
-
-echo ""
-echo "Log file is located at:"
-echo "  tail -f $SCRIPT_DIR/logs/master_monitor.log"
-echo ""
-echo "To view logs now:"
-echo "  tail -f $SCRIPT_DIR/logs/master_monitor.log"
+# Use exec to replace this process with the monitor
+exec ./gtnh_master_monitor.sh
 START_MONITORS_EOF
     
     log_info "start_monitors.sh"
