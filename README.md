@@ -128,10 +128,10 @@ These docs are customized with your actual service names and paths!
 ## Configuration
 
 Default settings (customizable during install):
-- Vote threshold: 60% of online players
-- TPS threshold: 19.0 (configurable for testing)
-- Vote cooldown: 10 minutes
-- TPS cooldown: 1 hour
-- Vote check interval: 10 seconds
-- TPS check cycle: 60 seconds (7 checks per cycle)
+- Vote threshold: 50% of online players
+- TPS threshold: 17.0
+- Vote cooldown: 9 minutes
+- TPS cooldown: 45 minutes
+- Vote check interval: 5 seconds
+- TPS check cycle: 30 seconds (7 checks per cycle, 4/7 must fail)
 
