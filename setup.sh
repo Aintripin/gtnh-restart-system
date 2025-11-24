@@ -10,7 +10,7 @@
 set -e  # Exit on error
 
 # Version
-VERSION="1.0.1"
+VERSION="1.0.2"
 
 # Colors for output
 RED='\033[0;31m'
@@ -362,10 +362,10 @@ get_configuration() {
     
     echo ""
     echo "Default settings:"
-    echo "  - Vote threshold: 60% of players"
-    echo "  - TPS threshold: 19.0 (restart if lower)"
-    echo "  - Vote cooldown: 10 minutes"
-    echo "  - TPS auto-restart cooldown: 1 hour"
+    echo "  - Vote threshold: 50% of players"
+    echo "  - TPS threshold: 17.0 (restart if lower)"
+    echo "  - Vote cooldown: 9 minutes"
+    echo "  - TPS auto-restart cooldown: 45 minutes"
     echo "  - Log level: INFO"
     echo ""
     
@@ -374,12 +374,12 @@ get_configuration() {
     
     if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
         # Use defaults
-        VOTE_THRESHOLD=60
-        TPS_THRESHOLD=19.0
-        VOTE_CHECK_INTERVAL=10
-        TPS_CHECK_INTERVAL=60
-        VOTE_COOLDOWN=600
-        TPS_COOLDOWN=3600
+        VOTE_THRESHOLD=50
+        TPS_THRESHOLD=17.0
+        VOTE_CHECK_INTERVAL=5
+        TPS_CHECK_INTERVAL=30
+        VOTE_COOLDOWN=540
+        TPS_COOLDOWN=2700
         LOG_LEVEL="INFO"
         log_info "Using default settings"
     else
@@ -489,7 +489,7 @@ TPS_THRESHOLD=TPS_THRESHOLD_PLACEHOLDER                  # TPS below this trigge
 TPS_CHECK_CYCLE_INTERVAL=TPS_CHECK_INTERVAL_PLACEHOLDER         # Wait N seconds between check cycles
 TPS_CHECKS_PER_CYCLE=7              # Check 7 times per cycle
 TPS_CHECK_DELAY=1                   # 1s between checks in cycle
-TPS_REQUIRED_BAD_CHECKS=5           # Need 5/7 bad checks to trigger restart
+TPS_REQUIRED_BAD_CHECKS=4           # Need 4/7 bad checks to trigger restart
 TPS_RESTART_COOLDOWN=TPS_COOLDOWN_PLACEHOLDER           # Cooldown between TPS restarts
 
 # Global Settings
